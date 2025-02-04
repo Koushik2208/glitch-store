@@ -14,6 +14,8 @@ export interface IProduct {
   createdAt: Date;
 }
 
+export interface IProductDoc extends IProduct, Document {}
+
 const ProductSchema = new Schema(
   {
     name: { type: String, required: true, unique: true, trim: true },

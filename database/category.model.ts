@@ -8,6 +8,8 @@ export interface ICategory {
   createdAt: Date;
 }
 
+export interface ICategoryDoc extends ICategory, Document {}
+
 const CategorySchema = new Schema(
   {
     name: { type: String, required: true, unique: true, trim: true },

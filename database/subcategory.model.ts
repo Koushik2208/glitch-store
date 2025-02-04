@@ -9,6 +9,8 @@ export interface ISubcategory {
   createdAt: Date;
 }
 
+export interface ISubcategoryDoc extends ISubcategory, Document {}
+
 const SubcategorySchema = new Schema(
   {
     name: { type: String, required: true, unique: true, trim: true },
