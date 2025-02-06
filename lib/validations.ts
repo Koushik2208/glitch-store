@@ -18,14 +18,20 @@ export const SubcategorySchema = z.object({
   name: z
     .string()
     .min(1, { message: "Required." })
-    .max(100, "Subcategory name cannot exceed 100 characters"),
-  image: z
-    .string({ required_error: "Image is required" })
-    .url("Invalid image URL"),
-  category: z.string().min(1, { message: "Category ID is required." }),
-  slug: z.string().optional(),
+    .max(100, "Subcategory name cannot exceed 100 characters")
+    .trim(),
+  image: z.string().url({ message: "Image must be a valid URL." }),
+  category: z
+    .string()
+    .min(1, { message: "Category ID is required." })
+    .regex(/^[0-9a-fA-F]{24}$/, { message: "Invalid category ID format." }),
+  slug: z
+    .string()
+    .regex(/^[a-z0-9-]+$/, {
+      message: "Slug can only contain lowercase letters, numbers, and hyphens.",
+    })
+    .optional(),
 });
-
 export const ProductSchema = z.object({
   name: z
     .string()
@@ -48,4 +54,12 @@ export const ProductSchema = z.object({
     .nonnegative({ message: "Stock cannot be negative." }),
   // reviews: z.number().int().nonnegative().optional().or(z.undefined()), // Uncomment if needed
   createdAt: z.date({ message: "Invalid date format." }).optional(),
+});
+
+export const PaginatedSearchParamsSchema = z.object({
+  page: z.number().int().positive().default(1),
+  pageSize: z.number().int().positive().default(10),
+  query: z.string().optional(),
+  filter: z.string().optional(),
+  sort: z.string().optional(),
 });

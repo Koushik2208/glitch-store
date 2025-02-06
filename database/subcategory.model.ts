@@ -15,20 +15,20 @@ const SubcategorySchema = new Schema(
   {
     name: { type: String, required: true, unique: true, trim: true },
     image: { type: String, required: true },
-    slug: { type: String, required: true },
+    slug: { type: String },
     category: { type: Types.ObjectId, ref: "Category", required: true }, // Link to Category
   },
   { timestamps: true }
 );
 
-SubcategorySchema.pre("save", function (next) {
-  if (this.isModified("name")) {
+SubcategorySchema.pre("save", async function (next) {
+  if (this.isModified("name") || !this.slug) {
     const baseSlug = slugify(this.name, { lower: true, strict: true });
     let uniqueSlug = baseSlug;
     let counter = 1;
 
     // Check for existing slugs and modify if needed
-    while (models.Subcategory.exists({ slug: uniqueSlug })) {
+    while (await models.Subcategory.exists({ slug: uniqueSlug })) {
       uniqueSlug = `${baseSlug}-${counter}`;
       counter++;
     }
